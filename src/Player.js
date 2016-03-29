@@ -60,7 +60,7 @@ var Player = cc.Sprite.extend({
 
     checkCanMove: function( direction ) {
         return true;
-        /*if ( this.getPosition().x >= 75 && this.getPosition().y >= 75 && this.getPosition().x <= 525 && this.getPosition().y <= 525 ) {
+        if ( this.getPosition().x >= 75 && this.getPosition().y >= 75 && this.getPosition().x <= 525 && this.getPosition().y <= 525 ) {
             var column = Math.round((this.getPosition().x-25)/50);
             var row = Math.round((this.getPosition().y-25)/50);
 
@@ -91,7 +91,7 @@ var Player = cc.Sprite.extend({
             return true;
         }
         else
-            return false;*/
+            return false;
     },
 
     addKeyboardHandlers: function() {
