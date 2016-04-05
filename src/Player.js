@@ -45,56 +45,6 @@ var Player = cc.Sprite.extend({
         var xBlock = ( Math.floor( ( this.getPosition().x )/50 ) ) * 50 + 25 + this.nextPositionX( direction );
         var yBlock = ( Math.floor( ( this.getPosition().y )/50 ) ) * 50 + 25 + this.nextPositionY( direction );
         return this.checkCaseMove1( direction, xPlayer, yPlayer, xBlock, yBlock ) && this.checkCaseMove2( direction, xPlayer, yPlayer, xBlock, yBlock );
-
-        /*var xPlayer = this.getPosition().x;
-        var yPlayer = this.getPosition().y;
-        var xBlock = ( Math.floor( ( this.getPosition().x )/50 ) ) * 50 + 25;
-        var yBlock = ( Math.floor( ( this.getPosition().y )/50 ) ) * 50 + 25;
-
-        if ( direction == Player.DIR.UP )
-            yBlock += 50;
-        else if ( direction == Player.DIR.RIGHT )
-            xBlock += 50;
-        else if ( direction == Player.DIR.DOWN )
-            yBlock -= 50;
-        else if ( direction == Player.DIR.LEFT )
-            xBlock -= 50;
-
-        var blockColumn = (xBlock-25)/50;
-        var blockRow = (yBlock-25)/50;
-
-        var case1 = true;
-        var case2 = true;
-
-        if ( blockMap[this.currentMap-1][blockRow][blockColumn] == 'B' || blockMap[this.currentMap-1][blockRow][blockColumn] == 'L' ){
-            var distance1 = Math.sqrt( (xPlayer-xBlock)*(xPlayer-xBlock)+(yPlayer-yBlock)*(yPlayer-yBlock) );
-            var limitDistance1;
-            if ( direction == Player.DIR.UP || direction == Player.DIR.DOWN )
-                limitDistance1 = Math.sqrt( (xPlayer-xBlock)*(xPlayer-xBlock)+2500 );
-            else
-                limitDistance1 = Math.sqrt( (yPlayer-yBlock)*(yPlayer-yBlock)+2500 );
-            if ( distance1 <= limitDistance1 )
-                case1 = false;
-        }
-
-        if ( ( direction == Player.DIR.UP || direction == Player.DIR.DOWN ) && ( Math.abs( yPlayer-yBlock ) < 50 ) ) {
-            if ( xPlayer < xBlock ) {
-                if ( blockMap[this.currentMap-1][blockRow][blockColumn-1] == 'B' || blockMap[this.currentMap-1][blockRow][blockColumn-1] == 'L' )
-                    case2 = false;
-            } else if ( xPlayer > xBlock ) {
-                if ( blockMap[this.currentMap-1][blockRow][blockColumn+1] == 'B' || blockMap[this.currentMap-1][blockRow][blockColumn+1] == 'L' )
-                    case2 = false;
-            }
-        } else if ( ( direction == Player.DIR.RIGHT || direction == Player.DIR.LEFT ) && ( Math.abs( xPlayer-xBlock ) < 50 ) ) {
-            if ( yPlayer < yBlock ) {
-                if ( blockMap[this.currentMap-1][blockRow-1][blockColumn] == 'B' || blockMap[this.currentMap-1][blockRow-1][blockColumn] == 'L' )
-                    case2 = false;
-            } else if ( yPlayer > yBlock ) {
-                if ( blockMap[this.currentMap-1][blockRow+1][blockColumn] == 'B' || blockMap[this.currentMap-1][blockRow+1][blockColumn] == 'L' )
-                    case2 = false;
-            }
-        }
-        return ( case1 && case2 );*/
     },
     nextPositionX: function( direction ) {
         if ( direction == Player.DIR.RIGHT )
