@@ -6,9 +6,6 @@ var Player = cc.Sprite.extend({
         this.direction = Player.RIGHT;
         this.keyFromKeyboard = 0;
         this.moving = false;
-
-        this.addKeyboardHandlers();
-        this.scheduleUpdate();
     },
     update: function( dt ) {
         if ( this.moving == true )
@@ -66,28 +63,28 @@ var Player = cc.Sprite.extend({
         var blockColumn = (xBlock-25)/50;
         var blockRow = (yBlock-25)/50;
         if ( blockMap[this.currentMap-1][blockRow][blockColumn] == 'B' || blockMap[this.currentMap-1][blockRow][blockColumn] == 'L' ){
-            var distance1 = Math.sqrt( (xPlayer-xBlock)*(xPlayer-xBlock)+(yPlayer-yBlock)*(yPlayer-yBlock) );
-            var limitDistance1;
+            var distance = Math.sqrt( (xPlayer-xBlock)*(xPlayer-xBlock)+(yPlayer-yBlock)*(yPlayer-yBlock) );
+            var limitDistance;
             if ( direction == Player.DIR.UP || direction == Player.DIR.DOWN )
-                limitDistance1 = Math.sqrt( (xPlayer-xBlock)*(xPlayer-xBlock)+2500 );
+                limitDistance = Math.sqrt( (xPlayer-xBlock)*(xPlayer-xBlock)+2500 );
             else
-                limitDistance1 = Math.sqrt( (yPlayer-yBlock)*(yPlayer-yBlock)+2500 );
-            if ( distance1 <= limitDistance1 )
+                limitDistance = Math.sqrt( (yPlayer-yBlock)*(yPlayer-yBlock)+2500 );
+            if ( distance <= limitDistance )
                 return false;
         }
         return true;
     },
     checkCaseMove2: function( direction, xPlayer, yPlayer, xBlock, yBlock ) {
-        var blockColumn = (xBlock-25)/50;
-        var blockRow = (yBlock-25)/50;
         if ( ( direction == Player.DIR.UP || direction == Player.DIR.DOWN ) && ( Math.abs( yPlayer-yBlock ) < 50 ) ) {
-            return this.checkCaseMove2Y( direction, xPlayer, yPlayer, xBlock, yBlock, blockRow, blockColumn );
+            return this.checkCaseMove2Y( direction, xPlayer, yPlayer, xBlock, yBlock );
         } else if ( ( direction == Player.DIR.RIGHT || direction == Player.DIR.LEFT ) && ( Math.abs( xPlayer-xBlock ) < 50 ) ) {
-            return this.checkCaseMove2X( direction, xPlayer, yPlayer, xBlock, yBlock, blockRow, blockColumn );
+            return this.checkCaseMove2X( direction, xPlayer, yPlayer, xBlock, yBlock );
         }
         return true;
     },
-    checkCaseMove2Y: function( direction, xPlayer, yPlayer, xBlock, yBlock, blockRow, blockColumn ) {
+    checkCaseMove2Y: function( direction, xPlayer, yPlayer, xBlock, yBlock ) {
+        var blockColumn = (xBlock-25)/50;
+        var blockRow = (yBlock-25)/50;
         if ( xPlayer < xBlock ) {
             if ( blockMap[this.currentMap-1][blockRow][blockColumn-1] == 'B' || blockMap[this.currentMap-1][blockRow][blockColumn-1] == 'L' )
                 return false;
@@ -97,7 +94,9 @@ var Player = cc.Sprite.extend({
         }
         return true;
     },
-    checkCaseMove2X: function( direction, xPlayer, yPlayer, xBlock, yBlock, blockRow, blockColumn ) {
+    checkCaseMove2X: function( direction, xPlayer, yPlayer, xBlock, yBlock ) {
+        var blockColumn = (xBlock-25)/50;
+        var blockRow = (yBlock-25)/50;
         if ( yPlayer < yBlock ) {
             if ( blockMap[this.currentMap-1][blockRow-1][blockColumn] == 'B' || blockMap[this.currentMap-1][blockRow-1][blockColumn] == 'L' )
                 return false;

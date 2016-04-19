@@ -2,6 +2,7 @@ var res = {
     block1_png :          "res/images/block1.png",
     enemy1_png :          "res/images/enemy1.png",
     finish_png :          "res/images/finish.png",
+    hole_png :            "res/images/hole.png",
     key_png :             "res/images/key.png",
     lockdoor_png :        "res/images/lockdoor.png",
     player_down_png :     "res/images/player-down.png",
