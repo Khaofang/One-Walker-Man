@@ -6,6 +6,8 @@ var Player = cc.Sprite.extend({
         this.direction = Player.RIGHT;
         this.keyFromKeyboard = 0;
         this.moving = false;
+        this.name = "";
+        this.score = 0;
     },
     update: function( dt ) {
         if ( this.moving == true )
@@ -117,7 +119,6 @@ var Player = cc.Sprite.extend({
             },
             onKeyReleased: function( keyCode, event ) {
                 self.moving = false;
-                //console.log( 'Key: ' + keyCode.toString() );
             }
         }, this);
     }
