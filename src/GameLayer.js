@@ -9,29 +9,9 @@ var StartScene = cc.Scene.extend({
 
 var GameLayer = cc.LayerColor.extend({
     init: function() {
-        this.currentMap = 1;
-        this.map = new Map[this.currentMap-1]();
-        this.createMap( this.currentMap );
-        this.endThisGame = false;
-        this.endThisMap = false;
-        this.addChild( this.map );
-
-        this.player = new Player();
-        this.setPlayerToNewMap();
-        this.addChild( this.player );
-        this.player.addKeyboardHandlers();
-        this.player.scheduleUpdate();
-
-        this.scoreLabel = cc.LabelTTF.create( '0', 'Arial', 30 );
-        this.scoreLabel.setString( this.player.score );
-        this.scoreLabel.setPosition( new cc.Point( 700, 500 ) );
-        this.addChild( this.scoreLabel );
-
-        this.extraScene = null;
-        this.allTimeUsed = 0;
-        this.timeToDie = 0;
-
-        this.scheduleUpdate();
+        this.addMouseListener();
+        this.frontPage = pageFront;
+        this.addChild( this.frontPage );
     },
 
     update: function( dt ) {
@@ -60,10 +40,36 @@ var GameLayer = cc.LayerColor.extend({
             }
         }
         else {
-            if( this.player.keyFromKeyboard == 13 )
+            if ( this.player.keyFromKeyboard == 13 )
                 this.restartGame();
         }
 
+    },
+
+    gameStart: function() {
+        this.currentMap = 1;
+        this.map = new Map[this.currentMap-1]();
+        this.createMap( this.currentMap );
+        this.endThisGame = false;
+        this.endThisMap = false;
+        this.addChild( this.map );
+
+        this.player = new Player();
+        this.setPlayerToNewMap();
+        this.addChild( this.player );
+        this.player.addKeyboardHandlers();
+        this.player.scheduleUpdate();
+
+        this.scoreLabel = cc.LabelTTF.create( 'SCORE\n0', 'Arial', 30 );
+        this.scoreLabel.setString( 'SCORE\n' + this.player.score );
+        this.scoreLabel.setPosition( new cc.Point( 700, 500 ) );
+        this.addChild( this.scoreLabel );
+
+        this.extraScene = null;
+        this.allTimeUsed = 0;
+        this.timeToDie = 0;
+
+        this.scheduleUpdate();
     },
 
     createMap: function( currentMap ) {
@@ -218,7 +224,7 @@ var GameLayer = cc.LayerColor.extend({
                     this.map.removeChild( this.map.point[i] );
                     this.player.score += this.map.point[i].score;
                     console.log( 'YOUR CURRENT SCORE : ' + this.player.score );
-                    this.scoreLabel.setString( this.player.score );
+                    this.scoreLabel.setString( 'SCORE\n' + this.player.score );
                 }
             }
         }
@@ -270,8 +276,23 @@ var GameLayer = cc.LayerColor.extend({
         this.removeChild( this.map );
         this.removeChild( this.scoreLabel );
         this.removeChild( this.extraScene );
-        this.init();
-    }
+        this.gameStart();
+    },
+
+
+    addMouseListener: function() {
+        var self = this;
+        cc.eventManager.addListener({
+            event: cc.EventListener.MOUSE,
+            onMouseDown: function( event ) {
+                if ( self.frontPage != null && event.getButton() == cc.EventMouse.BUTTON_LEFT ) {
+                    self.removeChild( self.frontPage );
+                    self.gameStart();
+                    self.frontPage = null;
+                }
+            }
+        }, this);
+    },
 
 
 
