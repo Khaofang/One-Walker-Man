@@ -22,6 +22,11 @@ var GameLayer = cc.LayerColor.extend({
         this.player.addKeyboardHandlers();
         this.player.scheduleUpdate();
 
+        this.scoreLabel = cc.LabelTTF.create( '0', 'Arial', 30 );
+        this.scoreLabel.setString( this.player.score );
+        this.scoreLabel.setPosition( new cc.Point( 700, 500 ) );
+        this.addChild( this.scoreLabel );
+
         this.extraScene = null;
         this.allTimeUsed = 0;
         this.timeToDie = 0;
@@ -213,6 +218,7 @@ var GameLayer = cc.LayerColor.extend({
                     this.map.removeChild( this.map.point[i] );
                     this.player.score += this.map.point[i].score;
                     console.log( 'YOUR CURRENT SCORE : ' + this.player.score );
+                    this.scoreLabel.setString( this.player.score );
                 }
             }
         }
@@ -262,6 +268,7 @@ var GameLayer = cc.LayerColor.extend({
     restartGame: function() {
         this.removeChild( this.player );
         this.removeChild( this.map );
+        this.removeChild( this.scoreLabel );
         this.removeChild( this.extraScene );
         this.init();
     }
