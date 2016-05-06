@@ -8,6 +8,7 @@ var res = {
     finish_png :          "res/images/finish.png",
     frontpage_scene_png:  "res/images/frontpage-scene.png",
     gameover_scene_png:   "res/images/gameover-scene.png",
+    gamewin_scene_png:    "res/images/gamewin-scene.png",
     hole_png :            "res/images/hole.png",
     key_png :             "res/images/key.png",
     lockdoor_png :        "res/images/lockdoor.png",
@@ -18,6 +19,8 @@ var res = {
     trap_off_png :        "res/images/trap-off.png",
     trap_on_png :         "res/images/trap-on.png",
     water_png :           "res/images/water.png",
+
+    pointcollect_mp3 :    "res/audio/pointcollect.mp3"
 };
 
 var g_resources = [];
