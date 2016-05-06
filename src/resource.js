@@ -7,6 +7,7 @@ var res = {
     enemy1_png :          "res/images/enemy1.png",
     finish_png :          "res/images/finish.png",
     frontpage_scene_png:  "res/images/frontpage-scene.png",
+    gameguide_scene_png:  "res/images/gameguide-scene.png",
     gameover_scene_png:   "res/images/gameover-scene.png",
     gamewin_scene_png:    "res/images/gamewin-scene.png",
     hole_png :            "res/images/hole.png",

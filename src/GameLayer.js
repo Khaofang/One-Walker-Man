@@ -10,8 +10,9 @@ var StartScene = cc.Scene.extend({
 
 var GameLayer = cc.LayerColor.extend({
     init: function() {
-        this.frontPage = pageFront;
-        this.addChild( this.frontPage );
+        this.addChild( pageFront );
+        this.addChild( pageGuide );
+        pageGuide.setVisible( false );
     },
 
     update: function( dt ) {
@@ -21,10 +22,10 @@ var GameLayer = cc.LayerColor.extend({
                 this.colliseEnemy();
                 this.fallToHole();
                 this.trapHit();
+                this.warningInWater();
                 this.collectKey();
                 this.collectPoint();
                 this.reachFinishPoint();
-                this.warningInWater();
             }
         }
         else {
@@ -32,19 +33,21 @@ var GameLayer = cc.LayerColor.extend({
                 this.restartGame();
             }
             else if ( this.player.keyFromKeyboard == 27 ) {
-                this.removeChild( this.frontPage );
                 this.removeChild( this.player );
                 this.removeChild( this.map );
                 this.removeChild( this.scoreLabel );
                 this.removeChild( this.warningLabel );
                 this.removeChild( this.extraScene );
-                this.init();
+                pageFront.setVisible( true );
+                pageFront.showing = true;
             }
         }
 
     },
 
     gameStart: function( currentLevel ) {
+        this.win = false;
+
         this.currentMap = currentLevel;
         this.map = new Map[this.currentMap-1]();
         this.createMap( this.currentMap );
@@ -85,7 +88,10 @@ var GameLayer = cc.LayerColor.extend({
         this.removeChild( this.scoreLabel );
         this.removeChild( this.warningLabel );
         this.removeChild( this.extraScene );
-        this.gameStart( this.currentMap );
+        if ( !this.win )
+            this.gameStart( this.currentMap );
+        else
+            this.gameStart( 1 );
     },
 
     createMap: function( currentMap ) {
@@ -208,6 +214,7 @@ var GameLayer = cc.LayerColor.extend({
             else {
                 console.log( 'GAME END, YOU WIN !!!' );
                 this.endThisGame = true;
+                this.win = true;
                 this.gameEnd( true );
             }
         }
@@ -299,12 +306,33 @@ var GameLayer = cc.LayerColor.extend({
         cc.eventManager.addListener({
             event: cc.EventListener.MOUSE,
             onMouseDown: function( event ) {
-                if ( self.frontPage != null && event.getButton() == cc.EventMouse.BUTTON_LEFT ) {
-                    self.removeChild( self.frontPage );
+                if ( pageFront.showing && !pageGuide.showing && event.getButton() == cc.EventMouse.BUTTON_LEFT ) {
+                    pageFront.showing = false;
+                    pageFront.setVisible( false );
                     self.gameStart( 1 );
-                    self.frontPage = null;
+                    console.log('Game Start');
+                }
+                else if ( pageFront.showing && !pageGuide.showing && event.getButton() == cc.EventMouse.BUTTON_RIGHT ) {
+                    self.changeToGuidePage();
+                }
+                else if ( pageFront.showing && pageGuide.showing && event.getButton() == cc.EventMouse.BUTTON_LEFT ) {
+                    self.changeToFrontPage();
+                }
+                else {
+                    console.log('-..-');
                 }
             }
         }, this);
+    },
+
+    changeToGuidePage: function() {
+        pageGuide.showing = true;
+        console.log('Go to Guide Page');
+        pageGuide.setVisible( true );
+    },
+    changeToFrontPage: function() {
+        pageGuide.showing = false;
+        pageGuide.setVisible( false );
+        console.log('Back to Front Page');
     }
 });

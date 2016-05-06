@@ -17,6 +17,7 @@
         "src/Enemy.js",
         "src/FrontPageScene.js",
         "src/GameEndScene.js",
+        "src/GameGuideScene.js",
         "src/GameLayer.js",
         "src/Map.js",
         "src/Player.js",
