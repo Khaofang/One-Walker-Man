@@ -1,7 +1,7 @@
 var Player = cc.Sprite.extend({
   	ctor: function( currentLevel ) {
         this._super();
-        this.initWithFile( res.player_right_png );
+        this.initWithFile( res.player_down_png );
         this.currentMap = currentLevel;
         this.direction = Player.RIGHT;
         this.keyFromKeyboard = 0;

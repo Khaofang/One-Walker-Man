@@ -10,6 +10,7 @@ var StartScene = cc.Scene.extend({
 
 var GameLayer = cc.LayerColor.extend({
     init: function() {
+        this.highScore = 0;
         this.addChild( pageFront );
         this.addChild( pageGuide );
         pageGuide.setVisible( false );
@@ -36,6 +37,7 @@ var GameLayer = cc.LayerColor.extend({
                 this.removeChild( this.player );
                 this.removeChild( this.map );
                 this.removeChild( this.scoreLabel );
+                this.removeChild( this.highScoreLabel );
                 this.removeChild( this.warningLabel );
                 this.removeChild( this.extraScene );
                 pageFront.setVisible( true );
@@ -61,13 +63,22 @@ var GameLayer = cc.LayerColor.extend({
         this.player.addKeyboardHandlers();
         this.player.scheduleUpdate();
 
-        this.scoreLabel = cc.LabelTTF.create( 'SCORE\n0', 'Arial', 30 );
+        this.scoreLabel = cc.LabelTTF.create( 'SCORE\n0', 'Agency FB', 40 );
+        this.scoreLabel.setAnchorPoint( new cc.Point( 0, 1 ) );
         this.scoreLabel.setString( 'SCORE\n' + this.player.score );
-        this.scoreLabel.setPosition( new cc.Point( 700, 500 ) );
+        this.scoreLabel.setPosition( new cc.Point( 610, 570 ) );
         this.addChild( this.scoreLabel );
 
-        this.warningLabel = cc.LabelTTF.create( ' ', 'Arial', 30 );
-        this.warningLabel.setPosition( new cc.Point( 700, 100 ) );
+        this.highScoreLabel = cc.LabelTTF.create( 'HIGH SCORE\n0', 'Agency FB', 40 );
+        this.highScoreLabel.setAnchorPoint( new cc.Point( 0, 1 ) );
+        this.highScoreLabel.setString( 'HIGH SCORE\n' + this.highScore );
+        this.highScoreLabel.setPosition( new cc.Point( 610, 450 ) );
+        this.addChild( this.highScoreLabel );
+
+        this.warningLabel = cc.LabelTTF.create( ' ', 'Agency FB', 40 );
+        this.warningLabel.setFontFillColor( new cc.Color( 255, 0, 0 ) );
+        this.warningLabel.setAnchorPoint( new cc.Point( 0, 1 ) );
+        this.warningLabel.setPosition( new cc.Point( 610, 100 ) );
         this.addChild( this.warningLabel );
 
         this.extraScene = null;
@@ -77,7 +88,6 @@ var GameLayer = cc.LayerColor.extend({
         this.scheduleUpdate();
     },
     gameEnd: function( isCompleteGame ) {
-        console.log( 'GAME END, SPACEBAR/ENTER TO CONTINUE.' );
         this.player.unscheduleUpdate();
         this.extraScene = new GameEndScene( isCompleteGame );
         this.addChild( this.extraScene );
@@ -86,6 +96,7 @@ var GameLayer = cc.LayerColor.extend({
         this.removeChild( this.player );
         this.removeChild( this.map );
         this.removeChild( this.scoreLabel );
+        this.removeChild( this.highScoreLabel );
         this.removeChild( this.warningLabel );
         this.removeChild( this.extraScene );
         if ( !this.win )
@@ -138,6 +149,7 @@ var GameLayer = cc.LayerColor.extend({
                     this.player.setPosition( column*50+25, row*50+25 );
             }
         }
+        this.player.initWithFile( res.player_down_png );
     },
     createBlock: function( currentMap, row, column ) {
         var block = new Block1();
@@ -202,7 +214,6 @@ var GameLayer = cc.LayerColor.extend({
         for ( var i = 0 ; i < this.map.finishPoint.length && !this.endThisMap ; i++ ) {
             if ( Math.abs( this.player.getPosition().x-this.map.finishPoint[i].getPosition().x ) <= 25
               && Math.abs( this.player.getPosition().y-this.map.finishPoint[i].getPosition().y ) <= 25 ) {
-                console.log( 'COMPLETE STAGE ' + this.currentMap.toString() );
                 this.endThisMap = true;
             }
         }
@@ -212,7 +223,6 @@ var GameLayer = cc.LayerColor.extend({
                 this.createNewMap();
             }
             else {
-                console.log( 'GAME END, YOU WIN !!!' );
                 this.endThisGame = true;
                 this.win = true;
                 this.gameEnd( true );
@@ -223,7 +233,6 @@ var GameLayer = cc.LayerColor.extend({
         for ( var i = 0 ; i < this.map.enemy.length ; i++ ) {
             if ( Math.sqrt( Math.pow( this.player.getPosition().x-this.map.enemy[i].getPosition().x,2 ) +
               Math.pow( this.player.getPosition().y-this.map.enemy[i].getPosition().y,2 ) ) < 50 ) {
-                console.log( 'YOU DIE !!' );
                 this.endThisGame = true;
                 this.gameEnd( false );
             }
@@ -233,7 +242,6 @@ var GameLayer = cc.LayerColor.extend({
         for ( var i = 0 ; i < this.map.hole.length ; i++ ) {
             if ( Math.abs( this.player.getPosition().x-this.map.hole[i].getPosition().x ) <= 25
               && Math.abs( this.player.getPosition().y-this.map.hole[i].getPosition().y ) <= 25 ) {
-                console.log( 'YOU DIE !!' );
                 this.endThisGame = true;
                 this.gameEnd( false );
             }
@@ -244,7 +252,6 @@ var GameLayer = cc.LayerColor.extend({
             if ( this.map.trap[i].trapWork
               && Math.abs( this.player.getPosition().x-this.map.trap[i].getPosition().x ) <= 40
               && Math.abs( this.player.getPosition().y-this.map.trap[i].getPosition().y ) <= 35 ) {
-                console.log( 'YOU DIE !!' );
                 this.endThisGame = true;
                 this.gameEnd( false );
             }
@@ -264,8 +271,11 @@ var GameLayer = cc.LayerColor.extend({
                     this.map.removeChild( this.map.point[i] );
                     this.player.score += this.map.point[i].score;
                     cc.audioEngine.playEffect( res.pointcollect_mp3 );
-                    console.log( 'YOUR CURRENT SCORE : ' + this.player.score );
                     this.scoreLabel.setString( 'SCORE\n' + this.player.score );
+                    if ( this.highScore < this.player.score ) {
+                        this.highScore = this.player.score;
+                        this.highScoreLabel.setString( 'HIGH SCORE\n' + this.highScore );
+                    }
                 }
             }
         }
@@ -287,9 +297,7 @@ var GameLayer = cc.LayerColor.extend({
             if ( this.inWater() ) {
                 this.timeToDie++;
                 this.warningLabel.setString( 'WARNING\n' + ( 11-Math.ceil( this.timeToDie/60 ) ) );
-                console.log( 'WARNING, YOU CAN BE IN HERE BY 10 SECONDS !!' );
                 if ( this.timeToDie >= 600 ) {
-                    console.log( 'YOU DIE !!' );
                     this.endThisGame = true;
                     this.gameEnd( false );
                 }
@@ -310,7 +318,6 @@ var GameLayer = cc.LayerColor.extend({
                     pageFront.showing = false;
                     pageFront.setVisible( false );
                     self.gameStart( 1 );
-                    console.log('Game Start');
                 }
                 else if ( pageFront.showing && !pageGuide.showing && event.getButton() == cc.EventMouse.BUTTON_RIGHT ) {
                     self.changeToGuidePage();
@@ -318,21 +325,16 @@ var GameLayer = cc.LayerColor.extend({
                 else if ( pageFront.showing && pageGuide.showing && event.getButton() == cc.EventMouse.BUTTON_LEFT ) {
                     self.changeToFrontPage();
                 }
-                else {
-                    console.log('-..-');
-                }
             }
         }, this);
     },
 
     changeToGuidePage: function() {
         pageGuide.showing = true;
-        console.log('Go to Guide Page');
         pageGuide.setVisible( true );
     },
     changeToFrontPage: function() {
         pageGuide.showing = false;
         pageGuide.setVisible( false );
-        console.log('Back to Front Page');
     }
 });
