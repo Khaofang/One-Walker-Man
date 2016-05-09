@@ -34,6 +34,7 @@ var GameLayer = cc.LayerColor.extend({
                 this.restartGame();
             }
             else if ( this.player.keyFromKeyboard == 27 ) {
+                this.extraScene.setVisible( false );
                 this.removeChild( this.player );
                 this.removeChild( this.map );
                 this.removeChild( this.scoreLabel );
@@ -60,6 +61,7 @@ var GameLayer = cc.LayerColor.extend({
         this.player = new Player( this.currentMap );
         this.setPlayerToNewMap();
         this.addChild( this.player );
+        this.player.setVisible( true );
         this.player.addKeyboardHandlers();
         this.player.scheduleUpdate();
 
@@ -81,7 +83,10 @@ var GameLayer = cc.LayerColor.extend({
         this.warningLabel.setPosition( new cc.Point( 610, 100 ) );
         this.addChild( this.warningLabel );
 
-        this.extraScene = null;
+        this.extraScene = pageGameOver;
+        this.extraScene.setVisible( false );
+        this.addChild( this.extraScene );
+
         this.allTimeUsed = 0;
         this.timeToDie = 0;
 
@@ -89,15 +94,21 @@ var GameLayer = cc.LayerColor.extend({
     },
     gameEnd: function( isCompleteGame ) {
         this.player.unscheduleUpdate();
-        this.extraScene = new GameEndScene( isCompleteGame );
-        this.addChild( this.extraScene );
-    },
-    restartGame: function() {
-        this.removeChild( this.player );
+
+        this.player.setVisible( false );
         this.removeChild( this.map );
         this.removeChild( this.scoreLabel );
         this.removeChild( this.highScoreLabel );
         this.removeChild( this.warningLabel );
+
+        if ( isCompleteGame )
+            this.extraScene = pageGameWin;
+        else
+            this.extraScene = pageGameOver;
+        this.extraScene.setVisible( true );
+    },
+    restartGame: function() {
+        this.removeChild( this.player );
         this.removeChild( this.extraScene );
         if ( !this.win )
             this.gameStart( this.currentMap );

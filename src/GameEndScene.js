@@ -8,3 +8,6 @@ var GameEndScene = cc.Sprite.extend({
             this.initWithFile( res.gamewin_scene_png );
     }
 });
+
+var pageGameOver = new GameEndScene( false );
+var pageGameWin = new GameEndScene( true );
