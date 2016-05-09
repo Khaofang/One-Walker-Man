@@ -34,13 +34,15 @@ var GameLayer = cc.LayerColor.extend({
                 this.restartGame();
             }
             else if ( this.player.keyFromKeyboard == 27 ) {
-                this.extraScene.setVisible( false );
+                pageGameWin.setVisible( false );
+                pageGameOver.setVisible( false );
                 this.removeChild( this.player );
                 this.removeChild( this.map );
                 this.removeChild( this.scoreLabel );
                 this.removeChild( this.highScoreLabel );
                 this.removeChild( this.warningLabel );
-                this.removeChild( this.extraScene );
+                this.removeChild( pageGameWin );
+                this.removeChild( pageGameOver );
                 pageFront.setVisible( true );
                 pageFront.showing = true;
             }
@@ -83,9 +85,10 @@ var GameLayer = cc.LayerColor.extend({
         this.warningLabel.setPosition( new cc.Point( 610, 100 ) );
         this.addChild( this.warningLabel );
 
-        this.extraScene = pageGameOver;
-        this.extraScene.setVisible( false );
-        this.addChild( this.extraScene );
+        this.addChild( pageGameWin );
+        pageGameWin.setVisible( false );
+        this.addChild( pageGameOver );
+        pageGameOver.setVisible( false );
 
         this.allTimeUsed = 0;
         this.timeToDie = 0;
@@ -102,14 +105,14 @@ var GameLayer = cc.LayerColor.extend({
         this.removeChild( this.warningLabel );
 
         if ( isCompleteGame )
-            this.extraScene = pageGameWin;
+            pageGameWin.setVisible( true );
         else
-            this.extraScene = pageGameOver;
-        this.extraScene.setVisible( true );
+            pageGameOver.setVisible( true );
     },
     restartGame: function() {
         this.removeChild( this.player );
-        this.removeChild( this.extraScene );
+        this.removeChild( pageGameWin );
+        this.removeChild( pageGameOver );
         if ( !this.win )
             this.gameStart( this.currentMap );
         else
